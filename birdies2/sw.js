@@ -1,4 +1,4 @@
-const V='birdies2-v3';
+const V='birdies2-v4';
 const CORE=['./','manifest.webmanifest','icons/icon-192.png','icons/icon-512.png','icons/maskable-512.png','icons/apple-touch-icon.png','icons/favicon.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(async c=>{
  await c.add(new Request('index.html',{cache:'reload'}));          // the game itself must be saved

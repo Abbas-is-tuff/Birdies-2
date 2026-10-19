@@ -195,6 +195,7 @@ body.masked #btnVL,body.masked #btnVR,body.masked #btnLight,body.masked #tabCam{
       <dt>Vents</dt><dd>Hold a vent light to see what is crawling in. Sugar uses the left vent, Pikachu the right. Pikachu bangs pans in the Kitchen first (CAM 10, sound only).</dd>
       <dt>Seeds</dt><dd>Your flashlight runs on seeds, and they never come back. Sugar won't hurt you, but if he reaches your desk he eats them and the light stays dark until he leaves. Put the mask on while he is in the left vent and he gives up.</dd>
       <dt>Toy</dt><dd>Toy Silver is the shiny one with the bowtie. He walks the Main Hall and the hallway into your office. The light does nothing: put the mask on until he leaves.</dd>
+      <dt>Mercury</dt><dd>Mercury is the young cockatiel in the party hat. He moves fast and scrambles the camera he is on. When he reaches your office, put the mask on until he leaves.</dd>
       <dt>Watch</dt><dd>Silver only moves when you are not watching him, and laughs when he does. Abbas skips the vents and walks straight in from Party Room 1, so keep checking CAM 01.</dd>
       <dt>Light</dt><dd>Aziz gets restless in Parts &amp; Service (CAM 08) when nobody checks on him, then sprints down the hallway. The mask does nothing to him: flash the light at him until he backs off.</dd>
       <dt>Music box</dt><dd>Open the cameras, go to CAM 09 and hold Wind. If the music stops, Puffy climbs out, and nothing stops Puffy.</dd>
@@ -737,6 +738,7 @@ const PAL_SRC = {
   sugar:   { face:'#ece6d4', crown:'#4fa9a3', body:'#5fbcb0', belly:'#7fcabd', back:'#4ea69c', rump:'#4a8fcb', wing:'#479e93', flight:'#2a646d', tail:'#3f9692', beak:'#e5b7ac', beakTip:'#f2e0d8', foot:'#b2a7ab', eye:'#0a0706', ring:'#e4e0d8', bib:0.92, faceBias:0 },
   silver:  { face:'#e4e4e2', crown:'#98a3ab', body:'#a6b0b7', belly:'#c1c7cb', back:'#8c97a0', rump:'#7b8da5', wing:'#8a96a0', flight:'#555f69', tail:'#86929e', beak:'#e4d2c7', beakTip:'#f4ebe4', foot:'#a9a2a4', eye:'#0a0706', ring:'#ecebe7', bib:0.75, faceBias:0 },
   toysilver: { face:'#fbfbf8', crown:'#d5dce2', body:'#dfe5ea', belly:'#f3f6f8', back:'#c9d1d8', rump:'#a9c4e8', wing:'#c6cfd7', flight:'#8d9ba8', tail:'#bcc8d3', beak:'#ff9f9a', beakTip:'#ffd0cc', foot:'#f0a8a8', eye:'#0a0706', iris:'#27c76a', ring:'#ffffff', ringW:0.9, bib:0.8, faceBias:0 },
+  mercury: { face:'#8e8a52', crown:'#5d5b44', crest:'#6a6640', cheek:'#ea621a', body:'#5a5853', belly:'#66645f', back:'#4a4844', rump:'#57544c', wing:'#4e4b47', flight:'#3b3936', patch:'#f4f2ec', tail:'#44413d', tailTip:'#36342f', beak:'#e8aca4', beakTip:'#f5cdc7', foot:'#7d6c7a', eye:'#0a0706', ring:null, bib:0, faceBias:0 },
   abbas:   { face:'#f1a48b', forehead:'#de4c3a', crown:'#61a549', body:'#6cb54d', belly:'#8cc968', back:'#599f42', rump:'#3b7dd6', wing:'#57a042', flight:'#2d5934', tail:'#55a045', beak:'#e9d1ba', beakTip:'#f6eadc', foot:'#a99c9a', eye:'#0a0706', ring:'#ebe6dc', bib:0.45, faceBias:0 },
   pikachu: { face:'#f6d93e', crown:'#f2d64e', crest:'#f4d846', cheek:'#ef6f22', body:'#f1eac4', belly:'#f4eed2', back:'#ebe2b4', rump:'#f0e9c6', wing:'#eee4b8', flight:'#e4d59a', tail:'#ede0a8', tailTip:'#e6d28a', beak:'#cdbdb0', beakTip:'#e2d6ca', foot:'#e0b4a9', eye:'#4a080a', ring:null, bib:0, faceBias:0 },
   aziz:    { face:'#83c64c', crown:'#6fbc46', nape:'#7fa8bd', collar:'#121212', rose:'#d87390', body:'#6cb749', belly:'#a6d46c', back:'#5ca63f', rump:'#6ab64b', wing:'#57a23e', flight:'#2e6a35', tail:'#5b9f86', tailTip:'#c8d266', beak:'#c0261f', beakTip:'#d6443a', beakLower:'#2a1a17', foot:'#958987', eye:'#0a0706', iris:'#ece4ae', ring:'#df6236', ringW:0.85, bib:0, faceBias:0 },
@@ -1251,7 +1253,7 @@ function makeBird(def) {
     geo.computeVertexNormals();
     const wingCol = (x, y, z, ny) => {
       const t = clamp(sh.distanceTo(new THREE.Vector3(x, y, z)) / A.wingLen, 0, 1);
-      const c = P.wing.clone().lerp(P.flight, smooth(0.45, 0.8, t)); if (isOwl) c.multiplyScalar(0.85 + fbm(x * 20, y * 20, z * 20) * 0.3);
+      const c = P.wing.clone().lerp(P.flight, smooth(0.45, 0.8, t)); if (P.patch) c.lerp(P.patch, smooth(0.14, 0.24, t) * smooth(0.62, 0.48, t) * smooth(0.3, 0.55, fbm(x * 9, y * 9, z * 9))); if (isOwl) c.multiplyScalar(0.85 + fbm(x * 20, y * 20, z * 20) * 0.3);
       return wither(c, x, y, z, W, ny);
     };
     if (D) {
@@ -1296,7 +1298,7 @@ function makeBird(def) {
   }
 
   // toy extras: rosy cheeks and a bowtie
-  if (def.toy) {
+  if (def.toy === true) {
     const blushMat = new THREE.MeshStandardMaterial({ color: 0xff7f9c, roughness: 0.55, emissive: 0x5a1020, emissiveIntensity: 0.35 });
     for (const sd of [-1, 1]) {
       const d = new THREE.Vector3(A.eyeDir[0] * sd * 1.05, A.eyeDir[1] - 0.5, A.eyeDir[2] + 0.1).normalize();
@@ -1318,6 +1320,15 @@ function makeBird(def) {
       w.rotation.z = -sd * Math.PI / 2; w.position.x = sd * 0.045; w.scale.set(1, 1, 0.45); bow.add(w);
     }
     const knot = new THREE.Mesh(new THREE.SphereGeometry(0.02, 14, 10), bowMat); knot.scale.set(1, 1.1, 0.8); bow.add(knot);
+  }
+
+  // Mercury's party hat
+  if (def.toy === 'party') {
+    const hm = new THREE.MeshStandardMaterial({ color: 0x3fa9f5, roughness: 0.5 }), sm = new THREE.MeshStandardMaterial({ color: 0xf4e04d, roughness: 0.5 }), pm = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9 });
+    const ph = new THREE.Group(); ph.position.set(0.05, A.headC[1] + 0.105 - A.pivot[1], A.headC[2] + 0.03 - A.pivot[2]); ph.rotation.set(0.1, 0, -0.38); neck.add(ph);
+    const cone = new THREE.Mesh(new THREE.ConeGeometry(0.058, 0.14, 24), hm); cone.position.y = 0.07; ph.add(cone);
+    for (const [y, r] of [[0.03, 0.044], [0.075, 0.031]]) { const st = new THREE.Mesh(new THREE.TorusGeometry(r * 1.0, 0.006, 6, 24), sm); st.rotation.x = Math.PI / 2; st.position.y = y; ph.add(st); }
+    const pom = new THREE.Mesh(new THREE.SphereGeometry(0.016, 12, 10), pm); pom.position.y = 0.146; ph.add(pom);
   }
 
   const bird = {
@@ -1717,9 +1728,10 @@ const DEFS = [
   { id: 'pikachu', name: 'Pikachu', pal: 'pikachu', shape: 'ct', withered: true, linger: true, tag: 'Withered · Cockatiel', path: ['parts', 'hall', 'kitchen', 'party2', 'ventRcam', 'blindR', 'office'], ai: [0, 2, 4, 7, 10, 14], role: 'A cockatiel, still yellow under the dust, orange cheeks faded. The crest is snapped and bent, the jaw hangs off its hinge, one eye dangles from a wire, and the right wing is gone down to a bare metal arm. Twitches when nobody is looking. Spends a long time banging pans in the Kitchen, where the camera is broken, then crawls through the right vent and lingers there.', counter: 'Listen for pans in the Kitchen, then the right duct. Mask.' },
   { id: 'aziz', name: 'Aziz', pal: 'aziz', shape: 'rn', withered: true, flash: true, tag: 'Withered · Indian Ringneck', path: ['parts', 'hall', 'hallAziz'], ai: [0, 2, 4, 7, 10, 15], role: 'An Indian ringneck: red hooked beak, black and rose collar, a tail longer than his body. Now half his face is torn away around a bare mechanical eye, the beak is snapped, both wings are in shreds and his legs are bare metal. He gets restless in Parts & Service when nobody checks on him: first he lifts his head, then he stands up, then he sprints down the Main Hall to the hallway outside your office.', counter: 'Check CAM 08 to keep him still. When he runs, flash him until he backs off. The mask does nothing.' },
   { id: 'toysilver', name: 'Toy Silver', pal: 'toysilver', shape: 'lb', toy: true, slotIdx: 2, tag: 'Toy · Lovebird · Shiny', path: ['stage', 'party2', 'hall', 'hallFar', 'office'], ai: [0, 4, 6, 8, 11, 15], role: 'The glossy new model of Silver: a rounder, shinier lovebird with rosy cheeks, big green eyes and a little red bowtie. He looks harmless and he is not. He starts on the Show Stage, wanders through Party Room 2 and the Main Hall, then walks right up the hallway into your office.', counter: 'He does not hide and the light does nothing. Put the mask on as soon as he is in the office and keep it on until he leaves.' },
+  { id: 'mercury', name: 'Mercury', pal: 'mercury', shape: 'ct', toy: 'party', slotIdx: 1, fast: true, erratic: true, jam: true, tag: 'Toy · Cockatiel · Chick', path: ['stage', 'party1', 'party3', 'hall', 'hallNear', 'office'], ai: [0, 0, 5, 8, 11, 16], role: 'The newest member of the flock: a young grey cockatiel with a yellow face, bright orange cheeks, a messy little crest and a party hat that is far too big for him. Cute, loud and never still. He zips from room to room, wanders back and forth, chirps so hard that the camera he is on crackles with static, then dashes down the hallway into your office.', counter: 'Watch for the static on the cameras. When he reaches the office, put the mask on until he leaves. The light does nothing.' },
   { id: 'puffy', name: 'Puffy', pal: 'puffy', shape: 'qp', tag: 'Music box · Quaker Parrot', role: 'A blue Quaker parrot, puffed up and dozing inside the birdhouse in the Prize Corner while the music plays. When it stops, he climbs out.', counter: 'Keep the music box wound on CAM 09. Nothing else works.' },
 ];
-const SCALE = { sugar: 1.55, silver: 1.6, toysilver: 1.5, abbas: 1.55, pikachu: 1.52, aziz: 1.58, puffy: 1.6 };
+const SCALE = { sugar: 1.55, silver: 1.6, toysilver: 1.5, mercury: 1.38, abbas: 1.55, pikachu: 1.52, aziz: 1.58, puffy: 1.6 };
 const NODES = {
   stage: 'stage', party1: 'party1', party2: 'party2', party3: 'party3', hall: 'hall', parts: 'parts',
   ventLcam: 'ventL', ventRcam: 'ventR', blindL: 'office', blindR: 'office', desk: 'office', hallFar: 'office', hallNear: 'office', hallAziz: 'office', office: 'office', kitchen: 'kitchen'
@@ -1739,7 +1751,7 @@ const CAMS = [
 const NIGHT_LINES = [
   ["Hello? Hello, hello! Welcome to your first night at Birdies Pizza & Perch.", "Quick heads-up: there are no doors in the new office. Nobody thought birds needed doors.", "If one of them wanders in, put on the Silver mask. They see it and think you're one of the flock.", "Also, keep the music box in the Prize Corner wound. CAM 09. Please do not skip that one.", "Sugar is the new star. He won't hurt you, he just loves seeds. And, uh, the flashlight runs on seeds. Don't ask. If he's in the left vent, put the mask on.", "Okay! Have a good shift."],
   ["Hey, you made it! Good. The old birds from the first location are in Parts & Service.", "They were supposed to be scrapped. They were not scrapped.", "Oh, and meet Toy Silver! Shiny new model, rosy cheeks, little bowtie. A real charmer. He walks the Main Hall straight to your office, so put the mask on when he shows up.", "Check on Aziz in Parts & Service now and then. CAM 08. Leave him alone too long and he bolts down the hallway.", "When he does, shine the flashlight at him until he backs off. The mask won't fool Aziz. Just the light."],
-  ["Night three. You're doing great. Probably.", "Abbas doesn't bother with the vents. He walks from Party Room 1 straight into your office. Keep an eye on CAM 01.", "Pikachu likes the Kitchen. The camera's broken in there, but you'll hear the pans. After that, it's the right vent.", "And Silver only moves when nobody's watching him. If you hear him laugh, he's on his way."],
+  ["Night three. You're doing great. Probably.", "Meet Mercury, our newest cockatiel! He is young, loud and cannot sit still. If a camera crackles with static, that is probably him. When he gets to your office, put the mask on.", "Abbas doesn't bother with the vents. He walks from Party Room 1 straight into your office. Keep an eye on CAM 01.", "Pikachu likes the Kitchen. The camera's broken in there, but you'll hear the pans. After that, it's the right vent.", "And Silver only moves when nobody's watching him. If you hear him laugh, he's on his way."],
   ["Uh, just a reminder about Puffy.", "Don't stare at the birdhouse for too long. Just wind it and move on.", "Keep. It. Wound."],
   ["Last night of the week! Lot of chirping on the cameras tonight.", "Stay calm, keep the mask close, and keep that music playing.", "See you at six."],
   ["You came back? For an extra night? Okay. Everybody's awake. Good luck."],
