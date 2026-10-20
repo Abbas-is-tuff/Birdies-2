@@ -196,6 +196,7 @@ body.masked #btnVL,body.masked #btnVR,body.masked #btnLight,body.masked #tabCam{
       <dt>Seeds</dt><dd>Your flashlight runs on seeds, and they never come back. Sugar won't hurt you, but if he reaches your desk he eats them and the light stays dark until he leaves. Put the mask on while he is in the left vent and he gives up.</dd>
       <dt>Toy</dt><dd>Toy Silver is the shiny one with the bowtie. He walks the Main Hall and the hallway into your office. The light does nothing: put the mask on until he leaves.</dd>
       <dt>Mercury</dt><dd>Mercury is the young cockatiel in the party hat. He moves fast and scrambles the camera he is on. When he reaches your office, put the mask on until he leaves.</dd>
+      <dt>Static</dt><dd>Cookie and Mango are joined together and carry a broken radio. Listen for the static: the louder it is, the closer they are. When they hang over your desk, put the mask on until it stops.</dd>
       <dt>Watch</dt><dd>Silver only moves when you are not watching him, and laughs when he does. Abbas skips the vents and walks straight in from Party Room 1, so keep checking CAM 01.</dd>
       <dt>Light</dt><dd>Aziz gets restless in Parts &amp; Service (CAM 08) when nobody checks on him, then sprints down the hallway. The mask does nothing to him: flash the light at him until he backs off.</dd>
       <dt>Music box</dt><dd>Open the cameras, go to CAM 09 and hold Wind. If the music stops, Puffy climbs out, and nothing stops Puffy.</dd>
@@ -739,6 +740,8 @@ const PAL_SRC = {
   silver:  { face:'#e4e4e2', crown:'#98a3ab', body:'#a6b0b7', belly:'#c1c7cb', back:'#8c97a0', rump:'#7b8da5', wing:'#8a96a0', flight:'#555f69', tail:'#86929e', beak:'#e4d2c7', beakTip:'#f4ebe4', foot:'#a9a2a4', eye:'#0a0706', ring:'#ecebe7', bib:0.75, faceBias:0 },
   toysilver: { face:'#fbfbf8', crown:'#d5dce2', body:'#dfe5ea', belly:'#f3f6f8', back:'#c9d1d8', rump:'#a9c4e8', wing:'#c6cfd7', flight:'#8d9ba8', tail:'#bcc8d3', beak:'#ff9f9a', beakTip:'#ffd0cc', foot:'#f0a8a8', eye:'#0a0706', iris:'#27c76a', ring:'#ffffff', ringW:0.9, bib:0.8, faceBias:0 },
   mercury: { face:'#8e8a52', crown:'#5d5b44', crest:'#6a6640', cheek:'#ea621a', body:'#5a5853', belly:'#66645f', back:'#4a4844', rump:'#57544c', wing:'#4e4b47', flight:'#3b3936', patch:'#f4f2ec', tail:'#44413d', tailTip:'#36342f', beak:'#e8aca4', beakTip:'#f5cdc7', foot:'#7d6c7a', eye:'#0a0706', ring:null, bib:0, faceBias:0 },
+  mango:   { face:'#f4724a', forehead:'#e8452f', crown:'#d6c43a', body:'#e0d33e', belly:'#ecdc52', back:'#b4b83a', rump:'#9cc440', wing:'#a8b73c', flight:'#4e6a2e', tail:'#5d8a3b', beak:'#e8c3a6', beakTip:'#f4e0cf', foot:'#b8a49a', eye:'#0a0706', ring:'#efe9dd', bib:0.55, faceBias:0 },
+  cookie:  { face:'#e2573d', forehead:'#c9341f', crown:'#4f6c3b', body:'#4a6b3a', belly:'#638540', back:'#3f5c33', rump:'#3f6cab', wing:'#40603a', flight:'#26402a', tail:'#3e5f3c', beak:'#e6c9b4', beakTip:'#f4e6d8', foot:'#a99c9a', eye:'#0a0706', ring:'#ebe6dc', bib:0.5, faceBias:0 },
   abbas:   { face:'#f1a48b', forehead:'#de4c3a', crown:'#61a549', body:'#6cb54d', belly:'#8cc968', back:'#599f42', rump:'#3b7dd6', wing:'#57a042', flight:'#2d5934', tail:'#55a045', beak:'#e9d1ba', beakTip:'#f6eadc', foot:'#a99c9a', eye:'#0a0706', ring:'#ebe6dc', bib:0.45, faceBias:0 },
   pikachu: { face:'#f6d93e', crown:'#f2d64e', crest:'#f4d846', cheek:'#ef6f22', body:'#f1eac4', belly:'#f4eed2', back:'#ebe2b4', rump:'#f0e9c6', wing:'#eee4b8', flight:'#e4d59a', tail:'#ede0a8', tailTip:'#e6d28a', beak:'#cdbdb0', beakTip:'#e2d6ca', foot:'#e0b4a9', eye:'#4a080a', ring:null, bib:0, faceBias:0 },
   aziz:    { face:'#83c64c', crown:'#6fbc46', nape:'#7fa8bd', collar:'#121212', rose:'#d87390', body:'#6cb749', belly:'#a6d46c', back:'#5ca63f', rump:'#6ab64b', wing:'#57a23e', flight:'#2e6a35', tail:'#5b9f86', tailTip:'#c8d266', beak:'#c0261f', beakTip:'#d6443a', beakLower:'#2a1a17', foot:'#958987', eye:'#0a0706', iris:'#ece4ae', ring:'#df6236', ringW:0.85, bib:0, faceBias:0 },
@@ -998,6 +1001,8 @@ function wither(c, x, y, z, W, ny = 0) {
   return c;
 }
 const DAMAGE = {
+  mango:   { seed: 11.3, tear: 0.655, fade: 0.15, wires: 8, jawHang: 0.45, jawCrook: 0.5, tilt: 0.45, glitch: 1, wingTear: 0.62, droop: [0.25, 0], crown: true },
+  cookie:  { seed: 6.6, tear: 0.645, fade: 0.2, wires: 9, droop: [0.6, 0.3], wingTear: 0.58, faceTear: -1, mechEye: -1, metalLegs: true, glitch: 1.3 },
   silver:  { seed: 1.3, tear: 0.66, wires: 5, droop: [0.0, 0.3], wingTear: 0.66 },
   abbas:   { seed: 4.1, tear: 0.64, wires: 6, droop: [0.38, 0.0], wingTear: 0.64, faceless: true, voidEyes: true },
   pikachu: { seed: 7.7, tear: 0.655, fade: 0.18, wires: 8, noWing: 1, jawHang: 0.45, jawCrook: 0.55, eyeOut: 1, tilt: 0.45, glitch: 1, wingTear: 0.62, droop: [0.25, 0], crestBroken: true },
@@ -1390,6 +1395,34 @@ function makeBird(def) {
   };
   return bird;
 }
+// Cookie & Mango: two lovebirds fused together with wires and a metal brace
+function makeTangle(def) {
+  const A = makeBird({ id: 'mango', pal: 'mango', shape: 'lb', withered: true });
+  const B = makeBird({ id: 'cookie', pal: 'cookie', shape: 'lb', withered: true });
+  const root = new THREE.Group(); root.name = def.id;
+  A.root.position.set(0.19, 0, 0.02); A.root.rotation.set(0, -0.14, -0.1);
+  B.root.position.set(-0.19, 0, -0.02); B.root.rotation.set(0, 0.16, 0.1);
+  root.add(A.root, B.root);
+  const wm = new THREE.MeshStandardMaterial({ color: 0x8a8f95, map: TEX.metal, metalness: 0.7, roughness: 0.4, envMap: ENV, envMapIntensity: 0.9 });
+  const brace = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.035, 0.05), wm); brace.position.set(0, 0.36, 0.06); brace.rotation.z = 0.05; root.add(brace);
+  for (const y of [0.34, 0.38]) { const bolt = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.02, 8), wm); bolt.rotation.x = Math.PI / 2; bolt.position.set(0, y, 0.09); root.add(bolt); }
+  const cols = [0x7a1414, 0x111111, 0xa8892a, 0x1d3a80, 0x2d6b2d, 0x7a1414, 0x111111];
+  for (let i = 0; i < 7; i++) {
+    const y = 0.18 + i * 0.07, sg = (i % 2 ? 1 : -1);
+    const curve = new THREE.CatmullRomCurve3([V(0.2, y, 0.12), V(0.08, y + 0.05 * sg, 0.17 + (i % 3) * 0.02), V(-0.06, y - 0.05 * sg, 0.16), V(-0.2, y + 0.02, 0.11)]);
+    root.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 24, 0.0048, 5), new THREE.MeshStandardMaterial({ color: cols[i], roughness: 0.45 })));
+  }
+  for (let i = 0; i < 4; i++) { const x = -0.15 + i * 0.1; addWire(root, V(x, 0.2, 0.15), V((i - 1.5) * 0.25, -1, 0.3).normalize(), 0.12 + (i % 2) * 0.1, WIRE_COLS[i]); }
+  const kids = [A, B];
+  const m = {
+    def, root, rig: root, glows: [...A.glows, ...B.glows], eyes: [...A.eyes, ...B.eyes], eyeY: A.eyeY,
+    pose: { ...POSE.stand }, glow: 0, extraYaw: 0, extraPitch: 0, extraRoll: 0, shake: 0,
+    update(dt, t) {
+      for (const c of kids) { c.pose = this.pose; c.glow = this.glow; c.extraYaw = this.extraYaw; c.extraPitch = this.extraPitch; c.extraRoll = this.extraRoll; c.shake = this.shake; c.update(dt, t); }
+    }
+  };
+  return m;
+}
 const POSE = {
   stand:   { lean: 0.04, yaw: 0, pitch: 0, roll: 0, beak: 0, wing: 0, alive: 1 },
   curious: { lean: 0.06, yaw: 0.2, pitch: -0.05, roll: 0.38, beak: 0, wing: 0, alive: 1 },
@@ -1606,6 +1639,7 @@ function buildOffice() {
   S.slots = {
     office: slot(0.05, 0, -2.0, 0, 'stare', 1.9, 0.8),
     officeL: slot(-0.85, 0, -1.85, 0.4, 'tilt', 1.9, 0.85),
+    officeTop: slot(0.0, 2.62, -1.55, 0, 'stare', 1.5, 0.85),
     blindL: slot(-2.8, 0.1, -1.0, Math.PI / 2, 'crawl', 1.18, 0.55),
     blindR: slot(2.8, 0.1, -1.0, -Math.PI / 2, 'crawl', 1.18, 0.55),
     desk: slot(0.73, 0.79, -1.36, -0.9, 'peck', 0.78, 0.35),
@@ -1757,9 +1791,10 @@ const DEFS = [
   { id: 'aziz', name: 'Aziz', pal: 'aziz', shape: 'rn', withered: true, flash: true, tag: 'Withered · Indian Ringneck', path: ['parts', 'hall', 'hallAziz'], ai: [0, 2, 4, 7, 10, 15], role: 'An Indian ringneck: red hooked beak, black and rose collar, a tail longer than his body. Now half his face is torn away around a bare mechanical eye, the beak is snapped, both wings are in shreds and his legs are bare metal. He gets restless in Parts & Service when nobody checks on him: first he lifts his head, then he stands up, then he sprints down the Main Hall to the hallway outside your office.', counter: 'Check CAM 08 to keep him still. When he runs, flash him until he backs off. The mask does nothing.' },
   { id: 'toysilver', name: 'Toy Silver', pal: 'toysilver', shape: 'lb', toy: true, slotIdx: 2, tag: 'Toy · Lovebird · Shiny', path: ['stage', 'party2', 'hall', 'hallFar', 'office'], ai: [0, 4, 6, 8, 11, 15], role: 'The glossy new model of Silver: a rounder, shinier lovebird with rosy cheeks, big green eyes and a little red bowtie. He looks harmless and he is not. He starts on the Show Stage, wanders through Party Room 2 and the Main Hall, then walks right up the hallway into your office.', counter: 'He does not hide and the light does nothing. Put the mask on as soon as he is in the office and keep it on until he leaves.' },
   { id: 'mercury', name: 'Mercury', pal: 'mercury', shape: 'ct', toy: 'party', slotIdx: 1, fast: true, erratic: true, jam: true, tag: 'Toy · Cockatiel · Chick', path: ['stage', 'party1', 'party3', 'hall', 'hallNear', 'office'], ai: [0, 0, 5, 8, 11, 16], role: 'The newest member of the flock: a young grey cockatiel with a yellow face, bright orange cheeks, a messy little crest and a party hat that is far too big for him. Cute, loud and never still. He zips from room to room, wanders back and forth, chirps so hard that the camera he is on crackles with static, then dashes down the hallway into your office.', counter: 'Watch for the static on the cameras. When he reaches the office, put the mask on until he leaves. The light does nothing.' },
+  { id: 'tangle', name: 'Cookie & Mango', pal: 'mango', shape: 'lb', pair: true, withered: true, jam: true, radio: true, hang: true, slotIdx: 1, tag: 'Withered · Lovebirds · Joined', path: ['party2', 'party3', 'hall', 'hallFar', 'office'], officeSlot: 'officeTop', ai: [0, 0, 4, 7, 10, 14], role: 'Two lovebirds, Cookie and Mango, taken apart and put back together as one: bolted side by side with a metal brace and a tangle of wires, feathers torn away, one eye bare metal. They drag themselves from room to room, and wherever they are, a broken radio hisses and crackles. When they reach your office they climb the ceiling and hang over your desk, upside down.', counter: 'Listen for the radio static: the louder it gets, the closer they are. When they hang over your desk, put the mask on until the static stops. The light does nothing.' },
   { id: 'puffy', name: 'Puffy', pal: 'puffy', shape: 'qp', tag: 'Music box · Quaker Parrot', role: 'A blue Quaker parrot, puffed up and dozing inside the birdhouse in the Prize Corner while the music plays. When it stops, he climbs out.', counter: 'Keep the music box wound on CAM 09. Nothing else works.' },
 ];
-const SCALE = { sugar: 1.55, silver: 1.6, toysilver: 1.5, mercury: 1.38, abbas: 1.55, pikachu: 1.52, aziz: 1.58, puffy: 1.6 };
+const SCALE = { sugar: 1.55, silver: 1.6, toysilver: 1.5, mercury: 1.38, tangle: 1.45, abbas: 1.55, pikachu: 1.52, aziz: 1.58, puffy: 1.6 };
 const NODES = {
   stage: 'stage', party1: 'party1', party2: 'party2', party3: 'party3', hall: 'hall', parts: 'parts',
   ventLcam: 'ventL', ventRcam: 'ventR', blindL: 'office', blindR: 'office', desk: 'office', hallFar: 'office', hallNear: 'office', hallAziz: 'office', office: 'office', kitchen: 'kitchen'
@@ -1779,7 +1814,7 @@ const CAMS = [
 const NIGHT_LINES = [
   ["Hello? Hello, hello! Welcome to your first night at Birdies Pizza & Perch.", "Quick heads-up: there are no doors in the new office. Nobody thought birds needed doors.", "If one of them wanders in, put on the Silver mask. They see it and think you're one of the flock.", "Also, keep the music box in the Prize Corner wound. CAM 09. Please do not skip that one.", "Sugar is the new star. He won't hurt you, he just loves seeds. And, uh, the flashlight runs on seeds. Don't ask. If he's in the left vent, put the mask on.", "Okay! Have a good shift."],
   ["Hey, you made it! Good. The old birds from the first location are in Parts & Service.", "They were supposed to be scrapped. They were not scrapped.", "Oh, and meet Toy Silver! Shiny new model, rosy cheeks, little bowtie. A real charmer. He walks the Main Hall straight to your office, so put the mask on when he shows up.", "Check on Aziz in Parts & Service now and then. CAM 08. Leave him alone too long and he bolts down the hallway.", "When he does, shine the flashlight at him until he backs off. The mask won't fool Aziz. Just the light."],
-  ["Night three. You're doing great. Probably.", "Meet Mercury, our newest cockatiel! He is young, loud and cannot sit still. If a camera crackles with static, that is probably him. When he gets to your office, put the mask on.", "Abbas doesn't bother with the vents. He walks from Party Room 1 straight into your office. Keep an eye on CAM 01.", "Pikachu likes the Kitchen. The camera's broken in there, but you'll hear the pans. After that, it's the right vent.", "And Silver only moves when nobody's watching him. If you hear him laugh, he's on his way."],
+  ["Night three. You're doing great. Probably.", "Meet Mercury, our newest cockatiel! He is young, loud and cannot sit still. If a camera crackles with static, that is probably him. When he gets to your office, put the mask on.", "One more thing. Cookie and Mango, the two lovebirds who got bolted together, are somewhere in the Party Rooms. You will hear their broken radio before you see them. The closer they get, the louder it crackles. When they hang over your desk, put the mask on until the static stops.", "Abbas doesn't bother with the vents. He walks from Party Room 1 straight into your office. Keep an eye on CAM 01.", "Pikachu likes the Kitchen. The camera's broken in there, but you'll hear the pans. After that, it's the right vent.", "And Silver only moves when nobody's watching him. If you hear him laugh, he's on his way."],
   ["Uh, just a reminder about Puffy.", "Don't stare at the birdhouse for too long. Just wind it and move on.", "Keep. It. Wound."],
   ["Last night of the week! Lot of chirping on the cameras tonight.", "Stay calm, keep the mask close, and keep that music playing.", "See you at six."],
   ["You came back? For an extra night? Okay. Everybody's awake. Good luck."],
@@ -1859,6 +1894,7 @@ const SFX = {
   clatter(vol = 0.15, pan = 0) {
     for (let k = 0; k < 5; k++) { const t0 = Math.random() * 0.7; sNoise(0.22, { type: 'bandpass', f: 1800 + Math.random() * 2500, q: 9, gain: vol, pan, t0 }); for (const f of [620, 1170, 1890]) sTone(f * (0.8 + Math.random() * 0.5), 0.35, { gain: vol * 0.18, pan, t0, type: 'triangle' }); }
   },
+  radio(vol = 0.15) { for (let i = 0; i < 4; i++) { const t0 = i * 0.07 + Math.random() * 0.05; sNoise(0.06 + Math.random() * 0.08, { type: 'bandpass', f: 600 + Math.random() * 2600, q: 2 + Math.random() * 4, gain: vol, t0 }); if (Math.random() < 0.5) sTone(300 + Math.random() * 900, 0.05, { type: 'square', gain: vol * 0.18, t0 }); } },
   thud() { sTone(55, 0.6, { fEnd: 30, gain: 0.5 }); sNoise(0.4, { type: 'lowpass', f: 200, gain: 0.4 }); },
 };
 const MELODY = [[81, 1], [84, 1], [88, 1], [86, 1], [84, 1], [83, 1], [81, 1], [76, 1], [81, 1], [83, 1], [84, 1], [83, 1], [79, 1], [83, 1], [86, 1], [84, 1], [83, 1], [81, 1], [80, 1], [81, 1], [83, 1], [81, 3]];
@@ -1900,7 +1936,7 @@ function placeBird(b, node) {
   if (S === SC.office) s = SC.office.slots[node === 'office' && b.def.officeSlot ? b.def.officeSlot : node];
   else { const order = b.def.slotIdx ?? DEFS.findIndex(d => d.id === b.def.id); s = S.slots[order % S.slots.length]; }
   S.scene.add(m.root);
-  m.root.position.copy(s.p); m.root.rotation.set(0, s.ry, 0); m.root.scale.setScalar(SCALE[b.def.id] * (s.s / 1.55));
+  m.root.position.copy(s.p); m.root.rotation.set(0, s.ry, b.def.hang && node === 'office' ? Math.PI : 0); m.root.scale.setScalar(SCALE[b.def.id] * (s.s / 1.55));
   m.pose = { ...POSE[s.pose] }; m.glow = s.glow; m.extraYaw = m.extraPitch = m.extraRoll = 0; m.shake = 0;
   const dark = b.def.darkEyes && S !== SC.office && node !== 'parts';
   if (dark) { m.glow = 1; m.pose = { ...POSE.stare }; }
@@ -2142,6 +2178,7 @@ function aiTick(dt) {
   const n = G.night - 1;
   for (const b of G.birds) {
     const d = b.def;
+    if (d.radio) { b.radT = (b.radT ?? 0) - dt; if (b.radT <= 0) { const near = b.node === 'office' ? 0.34 : b.node === 'hallFar' ? 0.2 : b.node === 'hall' ? 0.13 : 0.06; SFX.radio(near); b.radT = b.node === 'office' ? 0.35 + Math.random() * 0.4 : 1.1 + Math.random() * 1.6; } }
     if (b.node === 'office') continue;
     if (d.flash && b.node !== 'hallAziz') { if (azizTick(b, dt, n) === 'dead') return; continue; }
     if (d.thief && (b.node === 'desk' || b.node === 'blindL')) { thiefTick(b, dt, n); if (b.node === 'desk') continue; }
@@ -2401,7 +2438,7 @@ async function boot() {
   SC.hall = buildHall(); SC.parts = buildParts(); SC.ventL = buildVent('L'); SC.ventR = buildVent('R'); SC.prize = buildPrize(); SC.show = buildShowcase();
   SC.kitchen = { scene: new THREE.Scene(), camera: new THREE.PerspectiveCamera(60, 1, 0.1, 10), slots: [slot(0, -5, 0, 0, 'stand', 1.52, 0)] }; SC.kitchen.scene.background = new THREE.Color(0);
   await new Promise(r => setTimeout(r, 0));
-  for (const d of DEFS) { BIRDS[d.id] = makeBird(d); await new Promise(r => setTimeout(r, 0)); }
+  for (const d of DEFS) { BIRDS[d.id] = d.pair ? makeTangle(d) : makeBird(d); await new Promise(r => setTimeout(r, 0)); }
   buildMap(); resize(); addEventListener('resize', resize);
   toMenu();
   for (const k of Object.keys(SC)) { try { renderer.compile(SC[k].scene, SC[k].camera || SC.office.camera); } catch (e) {} }
